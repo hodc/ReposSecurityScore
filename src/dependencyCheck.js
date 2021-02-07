@@ -1,71 +1,31 @@
 'use strict';
-import Git from 'nodegit';
-import fs from 'fs';
 import depcheck from 'depcheck';
 
 
-export default class repoVerification {
+export default class dependencyCheck {
     static tempFolder = "./temp/repoClone/";
     static depCheckPath = "./node_modules/dependency-check/cli.js";
     static packagesJson = "package.json";
-    static start = async function (data) {
-        if (!data) {
+    static start = async function (item, clone_url, folderPath) {
+        if (!item) {
             return null;
         }
-        let retVal = [];
-        data = data.slice(0, 10);
-        for (const item of data) {
-            let { clone_url, id } = item;
-            let folderPath = `${this.tempFolder}${id}`;
-            try {
-                this.cloneRepository(clone_url, folderPath);
-                let dependencies = await this.verifyRepositoryDependencies(folderPath);
-                console.log(`result number of unused dependencies:${dependencies}`);
-                let repoScore = this.calculateRepoScore(dependencies);
-                console.log(`the repo: ${clone_url} has score:${repoScore}`);
-                let result = this.toDTO(item, repoScore);
-                retVal.push(result);
-            } catch (err) {
-                console.error("an error happened: " + err)
-            } finally {
-                fs.rmdir(folderPath, { recursive: true }, (error) => {
-                    if (error) {
-                        console.log('failed to remove directory');
-                        // console.log(error);
-                    }
-                    else {
-                        console.log("Non Recursive: Directories Deleted!");
-                    }
-                });
-            }
-        };
+        let retVal = null;
+        try {
+            let dependencies = await this.verifyRepositoryDependencies(folderPath);
+            console.log(`result number of unused dependencies:${dependencies}`);
+            let repoScore = this.calculateRepoScore(dependencies);
+            console.log(`the repo: ${clone_url} has score:${repoScore}`);
+            retVal = this.toDTO(item, repoScore);
+        } catch (err) {
+            console.error("an error happened: " + err)
+        }
+
 
         return retVal;
     };
 
-    /**
-     * Clone repository to you local drive
-     * @param {URL for the Repository} clone_url 
-     * @param {Local path for the repository git files} folderPath 
-     */
-    static cloneRepository = function (clone_url, folderPath) {
-        console.log(`Start clone url:${clone_url} to folder:${folderPath}`);
-        if (fs.existsSync(folderPath)) {
-            Git.Repository.open(folderPath)
-                .then(function (repo) {
-                    return repo.getMasterCommit();
-                });
-        } else {
-            Git.Clone(clone_url, folderPath, {})
-                .then(result => {
-                    console.log('result:' + result)
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    throw err;
-                });
-        }
-    };
+
 
 
     /**
@@ -77,6 +37,7 @@ export default class repoVerification {
         try {
             await depcheck(folderPath, depcheckOptions).then((unused) => {
                 retVal = unused.dependencies;
+                debugger;
                 // console.log(unused.dependencies); // an array containing the unused dependencies
                 // console.log(unused.devDependencies); // an array containing the unused devDependencies
                 // console.log(unused.missing); // a lookup containing the dependencies missing in `package.json` and where they are used
@@ -99,15 +60,15 @@ export default class repoVerification {
 
         if (dependencies && dependencies.length >= 0) {
             let numberOfUnused = dependencies.length;
-            if (1 <= numberOfUnused <= 5) {
+            if (1 <= numberOfUnused && numberOfUnused <= 5) {
                 retVal = 1;
-            } else if (6 <= numberOfUnused <= 10) {
+            } else if (6 <= numberOfUnused && numberOfUnused <= 10) {
                 retVal = 2;
-            } else if (11 <= numberOfUnused <= 20) {
+            } else if (11 <= numberOfUnused && numberOfUnused <= 20) {
                 retVal = 3;
-            } else if (21 <= numberOfUnused <= 30) {
+            } else if (21 <= numberOfUnused && numberOfUnused <= 30) {
                 retVal = 4;
-            } else {
+            } else if (numberOfUnused > 30) {
                 retVal = 5;
             }
         } else {
@@ -163,9 +124,9 @@ const depcheckOptions = {
     ],
     package: {
         // may specify dependencies instead of parsing package.json
-        dependencies: {
-            lodash: '^4.17.15',
-        },
+        // dependencies: {
+        //     lodash: '^4.17.15',
+        // },
         devDependencies: {
             eslint: '^6.6.0',
         },

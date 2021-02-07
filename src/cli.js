@@ -24,8 +24,8 @@ function parseArgumentsIntoOptions(rawArgs) {
     };
 }
 
-export function cli(args) {
+export async function cli(args) {
     let options = parseArgumentsIntoOptions(args);
     console.table(options);
-    start(options.repositoryURL, options.mode);
+    await start(options.repositoryURL, options.mode);
 }
