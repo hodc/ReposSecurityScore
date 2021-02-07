@@ -3,24 +3,25 @@ import depcheck from 'depcheck';
 
 
 export default class dependencyCheck {
-    static tempFolder = "./temp/repoClone/";
-    static depCheckPath = "./node_modules/dependency-check/cli.js";
-    static packagesJson = "package.json";
-    static start = async function (item, clone_url, folderPath) {
-        if (!item) {
-            return null;
-        }
-        let retVal = null;
-        try {
-            let dependencies = await this.verifyRepositoryDependencies(folderPath);
-            console.log(`result number of unused dependencies:${dependencies}`);
-            let repoScore = this.calculateRepoScore(dependencies);
-            console.log(`the repo: ${clone_url} has score:${repoScore}`);
-            retVal = this.toDTO(item, repoScore);
-        } catch (err) {
-            console.error("an error happened: " + err)
-        }
+    /**
+     * Start executing the dependencies check on repository
+     * @param {represent the repository from Github} item 
+     * @param {repository url to clone from} clone_url 
+     * @param {folder path where repository cloned} folderPath
+     */
+    static run = async function (item, folderPath) {
 
+        let retVal = null;
+
+        if (item) {
+            try {
+                let dependencies = await this.verifyRepositoryDependencies(folderPath);
+                let repoScore = this.calculateRepoScore(dependencies);
+                retVal = this.toDTO(item, repoScore);
+            } catch (err) {
+                console.error("an error happened: " + err)
+            }
+        }
 
         return retVal;
     };
@@ -34,10 +35,10 @@ export default class dependencyCheck {
     */
     static verifyRepositoryDependencies = async function (folderPath) {
         let retVal = null;
+
         try {
             await depcheck(folderPath, depcheckOptions).then((unused) => {
                 retVal = unused.dependencies;
-                debugger;
                 // console.log(unused.dependencies); // an array containing the unused dependencies
                 // console.log(unused.devDependencies); // an array containing the unused devDependencies
                 // console.log(unused.missing); // a lookup containing the dependencies missing in `package.json` and where they are used
@@ -48,6 +49,7 @@ export default class dependencyCheck {
         } catch (err) {
             console.warn("An error occurred while try to verify dependencies")
         }
+
         return retVal;
     };
 
@@ -89,7 +91,7 @@ export default class dependencyCheck {
             owner: item.owner.login,
             score
         }
-        console.table(score);
+
         return retVal;
     }
 }
