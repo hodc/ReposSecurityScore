@@ -10,7 +10,7 @@ export default class repositoryManager {
     * @param {Local path for the repository git files} folderPath 
     */
     static cloneRepository = async function (clone_url, folderPath) {
-        console.log(`Start clone url:${clone_url} to folder:${folderPath}`);
+        // console.log(`Start clone url:${clone_url} to folder:${folderPath}`);
         if (fs.existsSync(folderPath)) {
             return Git.Repository.open(folderPath)
                 .then(function (repo) {

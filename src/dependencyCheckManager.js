@@ -24,10 +24,7 @@ export default class dependencyCheck {
 
         return retVal;
     };
-
-
-
-
+    
     /**
     * Verify dependencies are not used.   
     * folderPath - the path to the repository git files
@@ -128,10 +125,10 @@ const depcheckOptions = {
         // dependencies: {
         //     lodash: '^4.17.15',
         // },
-        devDependencies: {
-            eslint: '^6.6.0',
-        },
-        peerDependencies: {},
-        optionalDependencies: {},
+        // devDependencies: {
+        //     eslint: '^6.6.0',
+        // },
+        // peerDependencies: {},
+        // optionalDependencies: {},
     },
 };
