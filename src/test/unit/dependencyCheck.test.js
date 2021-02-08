@@ -1,4 +1,4 @@
-import dependencyCheck from '../../dependencyCheck';
+import dependencyCheck from '../../dependencyCheckManager';
 
 const dependencies = ['library1', 'library2', 'library1', 'library2', 'library1', 'library2', 'library1', 'library2'];
 test('3 unused dependencies, return score 1', () => {
