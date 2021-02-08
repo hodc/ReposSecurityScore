@@ -6,7 +6,6 @@ import { start } from './main';
 function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(
         {
-
             '--count': Number,
             '--mode': Number,
             '-c': '--count',

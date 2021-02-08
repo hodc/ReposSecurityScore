@@ -6,7 +6,6 @@ export default class dependencyCheck {
     /**
      * Start executing the dependencies check on repository
      * @param {represent the repository from Github} item 
-     * @param {repository url to clone from} clone_url 
      * @param {folder path where repository cloned} folderPath
      */
     static run = async function (item, folderPath) {
