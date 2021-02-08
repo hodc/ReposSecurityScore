@@ -1,13 +1,13 @@
 // const _Api = require('./_baseAPI');
-import * as _Api from './_baseAPI';
+import * as _baseApi from './_baseAPI';
 const axios = require('axios');
 export default class githubApi {
-    static async getTrends(options) {
+    static async getTrends(options, count) {
         let retVal = null;
-        let url = _Api.Helpers.buildRequest(_Api.EndPoints.Github.Trends, options);
+        let url = _baseApi.Helpers.buildRequest(_baseApi.endPoints.github.trends, options);
         await axios.get(url)
             .then(response => {
-                console.log('result: ' + response.data.items.length);
+                console.log('getTrends results count: ' + response.data.items.length);
                 retVal = response.data.items;
             })
             .catch(error => {

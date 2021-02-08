@@ -7,25 +7,24 @@ function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(
         {
 
-            '--repoURL': String,
+            '--count': Number,
             '--mode': Number,
-            '-u': '--repoURL',
+            '-c': '--count',
             '-m': '--mode',
-            
+
         },
         {
             argv: rawArgs.slice(2),
         }
     );
     return {
-        repositoryURL: args['--repoURL'] || "https://api.github.com/search/repositories",
-        mode: args['--mode'] || 1,
-        // template: args._[0],
+        count: args['--count'] || 10,
+        mode: args['--mode'] || 1
     };
 }
 
 export async function cli(args) {
     let options = parseArgumentsIntoOptions(args);
     console.table(options);
-    await start(options.repositoryURL, options.mode);
+    await start(options.count, options.mode);
 }
