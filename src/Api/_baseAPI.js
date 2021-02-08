@@ -1,5 +1,5 @@
-export const HEADERS = {
-    GET_HEADERS: {
+export const headers = {
+    getHeaders: {
         headers: {
             'Content-Type': 'application/vnd.github.v3+json'
         },
@@ -7,9 +7,9 @@ export const HEADERS = {
     }
 }
 
-export const EndPoints = {
-    Github: {
-        Trends: "https://api.github.com/search/repositories"
+export const endPoints = {
+    github: {
+        trends: "https://api.github.com/search/repositories"
     },
 }
 

@@ -15,11 +15,10 @@ export default class repositoryManager {
             return Git.Repository.open(folderPath)
                 .then(function (repo) {
                     return repo.getMasterCommit();
-                });
+                })
         } else {
             return Git.Clone(clone_url, folderPath, {})
                 .then(result => {
-                    console.log('result:' + result)
                 })
                 .catch(function (err) {
                     console.log(err);
